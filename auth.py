@@ -14,10 +14,18 @@ import json
 # Stores username and master_password into a json file 
 
 # generate a random salt 
-salt = os.urandom()
+salt = os.urandom(16) #16 byte random salt 
 
 def register_master_password(master_password): 
-    pass 
+    # hash and salt the master password 
+    hashed_salted_master = hashlib.pbkdf2_hmac("sha256", master_password, salt, 10000)
+
+    # prepare for json storage 
+    data = {'master_password' : hashed_salted_master}
+
+    # store this in json file 
+    with open('storage.json', 'w') as file: 
+        json.dump(master_password, file)
 
 # checks if the given master_password is the correct one 
 # returns True if password matches, False otherwise 
@@ -26,15 +34,13 @@ def check_login(master_password_try):
     with open('storage.json', 'r') as file:
         data = json.load(file)
 
-    master_password = data['master password'] #this is hashed and salted
+    master_password = data.get('master_password') #this is hashed and salted
 
-    # hash the try  
-    hashed_try = bcrypt.hashpw(master_password_try, salt)
-    # salt the try 
-    hashed_salted_try = hashlib.pbkdf2_hmac("sha256", hashed_try, salt, 10000)
+    # hash and salt the try 
+    hashed_salted_try = hashlib.pbkdf2_hmac("sha256", master_password_try, salt, 10000)
 
     # compare to the actual master password
-    if hashed_salted_try == master_password: 
+    if bcrypt.checkpw(hashed_salted_try, master_password): 
         return True 
     else: 
         return False 
