@@ -3,6 +3,8 @@ from auth import *
 from crypto_utils import *
 import json
 
+## IDK SHOULD ALl OF THIS MAYBE GO INTO A DIFF FILE??? 
+
 storage_filename = 'storage.json'
 #set up json file so everything goes into the "credentials" object
 # gets called when someone initializes their master password
@@ -31,7 +33,7 @@ def add_new_credential(service, username, password):
         }
     ]
 
-    # add to the credentials in the json file, making sure to append
+    # add to the credentials in the json file, making sure to append instead of overwrite
     with open(storage_filename,'r') as file: 
         data = json.load(file)
     
@@ -42,9 +44,20 @@ def add_new_credential(service, username, password):
     with open(storage_filename, 'w') as file: 
         json.dump(data, file)
 
-
+# returns a tuple (username, decrypted password)
 def search_by_service(service): 
-    pass 
+    # open json file 
+    with open(storage_filename, 'r') as file: 
+        data = json.load(file) 
+
+    # search for correct service 
+    for credential in data.get('credentials'): 
+        if credential.get('service') == service: 
+            username = credential.get('username')
+            decrypted_password = decrypt_password(credential.get('password'))
+            return (username, decrypted_password)
+    # none found 
+    return None  
 
 def retrieve_credential(service, username): 
     pass 
