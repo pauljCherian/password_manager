@@ -20,17 +20,21 @@ def register_master_password(master_password):
     # hash and salt the master password 
     hashed_salted_master = hashlib.pbkdf2_hmac("sha256", master_password, salt, 10000)
 
+    # store this in json file 
+    with open('storage.json', 'r') as file: 
+        data = json.load(file)
+
     # prepare for json storage 
-    data = {'master_password' : hashed_salted_master}
+    data['master_password'].append(hashed_salted_master)
 
     # store this in json file 
     with open('storage.json', 'w') as file: 
-        json.dump(master_password, file)
+        json.dump(data, file)
 
 # checks if the given master_password is the correct one 
 # returns True if password matches, False otherwise 
 def check_login(master_password_try): 
-    # TODO: retrieve the actual master password from the json file 
+    # retrieve the actual master password from the json file 
     with open('storage.json', 'r') as file:
         data = json.load(file)
 
