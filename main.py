@@ -1,69 +1,69 @@
-# CLI interface 
 from auth import *
 from crypto_utils import *
-import json
+from src import *
+while True:
 
-## IDK SHOULD ALl OF THIS MAYBE GO INTO A DIFF FILE??? 
+    print('Welcome to the password manager. Type R to register, S to sign in, or Q to quit.')
+    user_input = input('> ').strip().lower()
 
-storage_filename = 'storage.json'
-#set up json file so everything goes into the "credentials" object
-# gets called when someone initializes their master password
-def set_up_json(filename): 
-    #json skeleton
-    data = {
-        'master_password' : '',
-        'credentials' : []
-    }
-    with open(filename, 'w') as file: 
-        json.dump(data, file)
-
-# actions 
-
-# adds new service, username, password to password vault 
-def add_new_credential(service, username, password): 
-    # encrypt the password 
-    encrypted_password = encrypt_password(password) #from crypto_utils 
-
-    # prepare json object 
-    credential = [
-        {
-            'service' : 'service',
-            'username' : 'username', 
-            'password' : encrypted_password
-        }
-    ]
-
-    # add to the credentials in the json file, making sure to append instead of overwrite
-    with open(storage_filename,'r') as file: 
-        data = json.load(file)
+    if user_input == 'q':
+        break
+    elif user_input == 'r':
+        print('Please enter your master password.')
+        pwd = input('> ').strip().lower()
+    elif user_input == 's':
+        print('Please set your master password.')
+        pwd = input('> ').strip().lower()
+        register_master_password(pwd)
+    else:
+         print('Incorrect command entered exiting program.')
+         break
+        
+    while not check_login(pwd):
+        print('Your master password is wrong, please enter the correct master password.')
+        pwd = input('> ').strip().lower()
     
-    # append new credential
-    data['credentials'].append(credential)
+    while True:
+        print('Thank you for logging in. Type S to search for a credential, A to add a credential, E to edit a credential, or D to delete a credential')
+        user_input = input('> ').strip().lower()
+        if user_input == 's':
+            print('Enter the service.')
+            serv = input('> ').strip().lower()
+            out = search_by_service(serv)
+            if out == None:
+                print('That service does not exist.')
+            else:
+                print(f"Username: {out[0]}\n, Password: {out[1]}")
 
-    # write into json file 
-    with open(storage_filename, 'w') as file: 
-        json.dump(data, file)
+        elif user_input == 'a':
+            print('Enter the service.')
+            serv = input('> ').strip().lower()
+            print('Enter the username.')
+            un = input('> ').strip().lower()
+            cred_pw = input('> ').strip().lower()
+            add_new_credential(serv, un, cred_pw)
 
-# returns a tuple (username, decrypted password)
-def search_by_service(service): 
-    # open json file 
-    with open(storage_filename, 'r') as file: 
-        data = json.load(file) 
+        elif user_input == 'e':
+            print('Enter the service to edit.')
+            serv = input('> ').strip().lower()
+            print('Enter the username.')
+            un = input('> ').strip().lower()
+            cred_pw = input('> ').strip().lower()
+            add_new_credential(serv, un, cred_pw)
 
-    # search for correct service 
-    for credential in data.get('credentials'): 
-        if credential.get('service') == service: 
-            username = credential.get('username')
-            decrypted_password = decrypt_password(credential.get('password'))
-            return (username, decrypted_password)
-    # none found 
-    return None  
+        elif user_input == 'd':
 
-def retrieve_credential(service, username): 
-    pass 
 
-def edit_credential(service, username, new_password): 
-    pass 
 
-def delete_credential(service): 
-    pass
+    
+
+
+
+
+
+
+
+
+
+
+    
