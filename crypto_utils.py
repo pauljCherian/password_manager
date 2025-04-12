@@ -1,5 +1,5 @@
 # encryption and decryption logic 
-from crytpography.fernet import Fernet
+from cryptography.fernet import Fernet
 # Constant encryption_key variable to remember the encryption key 
 # add_encrypted_credential(service, username, password) 
 # calls some encrypt function in cryptography library to encrypt service, username, password 
@@ -13,10 +13,10 @@ f = Fernet(encryption_key)
 
 # only encrypt a password 
 def encrypt_password(password): 
-    token = f.encrypt(password)
+    token = f.encrypt(password.encode()).decode()
     return token  #encrypted bit string 
 
 #decrypt some json object password 
 def decrypt_password(encrypted_password): 
-    password = f.decrypt(encrypted_password)
+    password = f.decrypt(encrypted_password.encode()).decode()
     return password 

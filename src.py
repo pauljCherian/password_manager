@@ -59,11 +59,37 @@ def search_by_service(service):
     # none found 
     return None  
 
-def retrieve_credential(service, username): 
-    pass 
-
-def edit_credential(service, username, new_password): 
-    pass 
-
-def delete_credential(service): 
+def retrieve_credential(service, username):
     pass
+
+
+def edit_credential_username(service, new_username): 
+    # open json file 
+    with open(storage_filename, 'r') as file: 
+        data = json.load(file) 
+
+    # search for correct service 
+    for credential in data.get('credentials'): 
+        if credential.get('service') == service: 
+            credential['username'] = new_username
+
+def edit_credential_password(service, new_password): 
+    # open json file 
+    with open(storage_filename, 'r') as file: 
+        data = json.load(file) 
+
+    # search for correct service 
+    for credential in data.get('credentials'): 
+        if credential.get('service') == service: 
+            credential['password'] = encrypt_password(new_password.encode()).hexdigest()
+
+def delete_credential(service):
+     # open json file 
+    with open(storage_filename, 'r') as file: 
+        data = json.load(file) 
+
+    # search for correct service 
+    for credential in data.get('credentials'): 
+        if credential.get('service') == service: 
+            del data[credential]
+
