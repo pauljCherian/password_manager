@@ -47,9 +47,9 @@ def search_by_service(service):
 
     # search for correct service 
     for credential in data.get('credentials'): 
-        if credential.get('service') == service: 
-            username = credential.get('username')
-            decrypted_password = decrypt_password(credential.get('password'))
+        if credential[0] == service: 
+            username = credential[1]
+            decrypted_password = decrypt_password(credential[2])
             return (username, decrypted_password)
     # none found 
     return None  
@@ -65,8 +65,8 @@ def edit_credential_username(service, new_username):
 
     # search for correct service 
     for credential in data.get('credentials'): 
-        if credential.get('service') == service: 
-            credential['username'] = new_username
+        if credential[0] == service: 
+            credential[1] = new_username
 
 def edit_credential_password(service, new_password): 
     # open json file 
@@ -75,16 +75,29 @@ def edit_credential_password(service, new_password):
 
     # search for correct service 
     for credential in data.get('credentials'): 
-        if credential.get('service') == service: 
-            credential['password'] = encrypt_password(new_password.encode()).hexdigest()
+        if credential[0] == service: 
+            credential[2] = encrypt_password(new_password.encode()).hexdigest()
 
 def delete_credential(service):
+    target = None
      # open json file 
     with open(storage_filename, 'r') as file: 
         data = json.load(file) 
 
     # search for correct service 
     for credential in data.get('credentials'): 
-        if credential.get('service') == service: 
-            del data[credential]
+        if credential[0] == service: 
+            target = credential
+    
 
+    if target == None: 
+        print("Service not found")
+        return 
+    
+    # Remove it from the list
+    if target in data.get('credentials'):
+        data.get('credentials').remove(target)
+
+    # Save the updated list back to the JSON file
+    with open('storage.json', 'w') as file:
+        json.dump(data, file, indent=4)
