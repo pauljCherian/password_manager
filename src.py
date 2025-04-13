@@ -24,14 +24,9 @@ def add_new_credential(service, username, password):
     # encrypt the password 
     encrypted_password = encrypt_password(password) #from crypto_utils 
 
-    # prepare json object 
-    credential = [
-        {
-            'service' : service,
-            'username' : username, 
-            'password' : encrypted_password
-        }
-    ]
+    # prepare json list (index 0 -service, index 1- username, index 2 - password) 
+    credential = [service, username, encrypted_password]
+
 
     # add to the credentials in the json file, making sure to append instead of overwrite
     with open(storage_filename,'r') as file: 
