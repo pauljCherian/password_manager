@@ -27,8 +27,8 @@ def add_new_credential(service, username, password):
     # prepare json object 
     credential = [
         {
-            'service' : 'service',
-            'username' : 'username', 
+            'service' : service,
+            'username' : username, 
             'password' : encrypted_password
         }
     ]
