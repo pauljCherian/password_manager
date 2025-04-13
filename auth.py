@@ -24,7 +24,7 @@ def register_master_password(master_password):
         data = json.load(file)
 
     # prepare for json storage 
-    data['master_password'] = hashed_salted_master
+    data.get('master_password') = hashed_salted_master
 
     # store this in json file 
     with open('storage.json', 'w') as file: 
@@ -37,7 +37,7 @@ def check_login(master_password_try):
     with open('storage.json', 'r') as file:
         data = json.load(file)
 
-    master_password = data.get('master_password') #this is hashed and salted
+    master_password = data.get('master_password')#this is hashed and salted
 
     # hash and salt the try 
     hashed_salted_try = hashlib.sha256(salt + master_password_try.encode()).hexdigest()
