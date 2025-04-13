@@ -67,7 +67,7 @@ while True:
             elif change == 'p':
                 print('Enter the new password.')
                 new_pw = input('> ').strip().lower()
-                edit_credential_username(serv, new_pw)
+                edit_credential_password(serv, new_pw)
                 print(f'Password for {serv} edited.')
 
             else:

@@ -64,10 +64,14 @@ def edit_credential_username(service, new_username):
     with open(storage_filename, 'r') as file: 
         data = json.load(file) 
 
-    # search for correct service 
+    # search for correct service and edit the password  
     for credential in data.get('credentials'): 
         if credential[0] == service: 
             credential[1] = new_username
+
+    # Save the updated list back to the JSON file
+    with open('storage.json', 'w') as file:
+        json.dump(data, file, indent=4)
 
 def edit_credential_password(service, new_password): 
     # open json file 
@@ -77,7 +81,11 @@ def edit_credential_password(service, new_password):
     # search for correct service 
     for credential in data.get('credentials'): 
         if credential[0] == service: 
-            credential[2] = encrypt_password(new_password.encode()).hexdigest()
+            credential[2] = encrypt_password(new_password)
+
+     # Save the updated list back to the JSON file
+    with open('storage.json', 'w') as file:
+        json.dump(data, file)
 
 def delete_credential(service):
     target = None
@@ -101,6 +109,6 @@ def delete_credential(service):
 
     # Save the updated list back to the JSON file
     with open('storage.json', 'w') as file:
-        json.dump(data, file, indent=4)
+        json.dump(data, file)
 
     
