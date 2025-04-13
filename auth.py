@@ -24,7 +24,7 @@ def register_master_password(master_password):
         data = json.load(file)
 
     # prepare for json storage 
-    data.get('master_password') = hashed_salted_master
+    data['master_password'] = hashed_salted_master
 
     # store this in json file 
     with open('storage.json', 'w') as file: 
