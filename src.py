@@ -25,6 +25,7 @@ def add_new_credential(service, username, password):
     encrypted_password = encrypt_password(password) #from crypto_utils 
 
     # prepare json list (index 0 -service, index 1- username, index 2 - password) 
+    print(f"Password: {password} and encrypted: {encrypted_password}")
     credential = [service, username, encrypted_password]
 
 
@@ -101,3 +102,5 @@ def delete_credential(service):
     # Save the updated list back to the JSON file
     with open('storage.json', 'w') as file:
         json.dump(data, file, indent=4)
+
+    

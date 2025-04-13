@@ -23,8 +23,11 @@ while True:
         print('Your master password is wrong, please enter the correct master password.')
         pwd = input('> ').strip().lower()
     
+    print('Thank you for logging in.')
     while True:
-        print('Thank you for logging in. Type S to search for a credential, A to add a credential, E to edit a credential, or D to delete a credential')
+
+        
+        print('Type S to search for a credential, A to add a credential, E to edit a credential, or D to delete a credential')
         user_input = input('> ').strip().lower()
         if user_input == 's':
             print('Enter the service.')
