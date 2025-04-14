@@ -6,6 +6,8 @@ try:
 
     set_up_json('storage.json')
     print('Welcome to the password manager. \nType R to register, S to sign in. To quit and log out at any time, press (control + C).')
+    
+    first_time = False # keeps track of if the user has initially logged in 
     while True:
         user_input = input('> ').strip().lower()
 

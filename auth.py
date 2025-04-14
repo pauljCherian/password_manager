@@ -1,7 +1,9 @@
 # master password set up and log in 
 import hashlib 
 import os 
-import json 
+import json
+from main import first_time 
+from crypto_utils import *
 
 # check_login(username, password)
 # Checks if username is valid 
@@ -12,8 +14,22 @@ import json
 # Hashes and salts the master_password using PBKDF2HMAC
 # Stores username and master_password into a json file 
 
-# generate a random salt 
-salt = os.urandom(16) #16 byte random salt 
+# generate a random salt if first time 
+if first_time: 
+    salt = os.urandom(16) #16 byte random salt 
+    # encrypt the salt 
+    encrypted_salt = encrypt_password(salt)
+    # save the salt into auth.json
+    # store this in json file 
+    with open('auth.json', 'r') as file: 
+        data = json.load(file)
+    
+    data['salt'] = encrypted_salt
+
+    # store this in json file 
+    with open('storage.json', 'w') as file: 
+        json.dump(data, file)
+
 
 def register_master_password(master_password): 
     # hash and salt the master password 
@@ -33,6 +49,13 @@ def register_master_password(master_password):
 # checks if the given master_password is the correct one 
 # returns True if password matches, False otherwise 
 def check_login(master_password_try): 
+    # retrieve the salt 
+    # retrieve the actual master password from the json file 
+    with open('auth.json', 'r') as file:
+        salt_data = json.load(file)
+    
+    saved_salt = decrypt_password(data.get(salt))
+
     # retrieve the actual master password from the json file 
     with open('storage.json', 'r') as file:
         data = json.load(file)
@@ -40,7 +63,7 @@ def check_login(master_password_try):
     master_password = data.get('master_password')#this is hashed and salted
 
     # hash and salt the try 
-    hashed_salted_try = hashlib.sha256(salt + master_password_try.encode()).hexdigest()
+    hashed_salted_try = hashlib.sha256(saved_salt + master_password_try.encode()).hexdigest()
 
     # compare to the actual master password
     if hashed_salted_try == master_password: 
