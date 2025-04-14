@@ -1,6 +1,8 @@
 from auth import *
 from crypto_utils import *
 from src import *
+
+first_time = False # keeps track of if the user has initially logged in 
 while True:
     set_up_json('storage.json')
     print('Welcome to the password manager. Type R to register, S to sign in, or Q to quit.')
@@ -12,6 +14,7 @@ while True:
         print('Please register your master password by typing it below.')
         pwd = input('> ').strip().lower()
         register_master_password(pwd)
+        first_time = True
     elif user_input == 's':
         print('Please sign in with your master password.')
         pwd = input('> ').strip().lower()
