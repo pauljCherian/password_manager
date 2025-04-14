@@ -3,10 +3,9 @@ from crypto_utils import *
 from src import *
 
 try:
-    
 
-    if set_up_json('storage.json')
-    print('Welcome to the password manager.  \nType R to register, S to sign in. To quit and log out at any time, press (control + C).')
+    set_up_json('storage.json')
+    print('Welcome to the password manager. \nType R to register, S to sign in. To quit and log out at any time, press (control + C).')
     while True:
         user_input = input('> ').strip().lower()
 
@@ -24,7 +23,7 @@ try:
             break
             
         while not check_login(pwd):
-            print('Your master password is wrong, please enter the correct master password or press (control + C) to log out exit.')
+            print('Your master password is wrong, please enter the correct master password or press (control + C) to log out.')
             pwd = input('> ').strip().lower()
         
         print('Thank you for logging in.')
