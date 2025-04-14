@@ -111,4 +111,9 @@ def delete_credential(service):
     with open('storage.json', 'w') as file:
         json.dump(data, file)
 
-    
+def user_logout(user_input):
+    if user_input == 'EXIT':
+        return True
+    else:
+        return False
+
