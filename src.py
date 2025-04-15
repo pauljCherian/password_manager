@@ -6,18 +6,6 @@ import json
 ## IDK SHOULD ALl OF THIS MAYBE GO INTO A DIFF FILE??? 
 
 storage_filename = 'storage.json'
-#set up json file so everything goes into the "credentials" object
-# gets called when someone initializes their master password
-def set_up_json(filename): 
-    # get the current data in the json file
-    data = json.load
-    #json skeleton
-    data = {
-        'master_password' : '',
-        'credentials' : []
-    }
-    with open(filename, 'w') as file: 
-        json.dump(data, file)
 
 # actions 
 
