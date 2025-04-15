@@ -16,6 +16,10 @@ def encrypt_password(password):
     token = f.encrypt(password.encode()).decode()
     return token  #encrypted bit string 
 
+def encrypt_salt(salt): 
+    token = f.encrypt(salt).decode()
+    return token  #encrypted bit string 
+
 #decrypt some json object password 
 def decrypt_password(encrypted_password): 
     password = f.decrypt(encrypted_password.encode()).decode()
