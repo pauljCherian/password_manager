@@ -54,7 +54,7 @@ def check_login(master_password_try):
     with open('auth.json', 'r') as file:
         salt_data = json.load(file)
     
-    saved_salt = decrypt_password(data.get(salt))
+    saved_salt = decrypt_password(salt_data.get(salt))
 
     # retrieve the actual master password from the json file 
     with open('storage.json', 'r') as file:
