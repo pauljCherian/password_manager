@@ -1,3 +1,4 @@
+# command line interface
 from auth import *
 from crypto_utils import *
 from src import *
@@ -8,12 +9,8 @@ vault = None
 def set_up_json(filename): 
     try:
         with open(filename, 'r') as file:
-            #content = file.read().strip()
             vault = json.load(file)
-            # if not content:
-            #     vault = {}
-            # else:
-            #     vault = json.load(filename)
+
     except (json.JSONDecodeError, IOError):
         vault = {}
 
@@ -24,11 +21,9 @@ def set_up_json(filename):
         }
         with open(filename, 'w') as file: 
             json.dump(vault, file, indent=4)
-        print("Vault initialized.")
-    else:
-        print("Vault already set up.")
-
-    print(f"vault: {vault}")
+        #print("Vault initialized.")
+    #else:
+        #print("Vault already set up.")
 
 
 try:
@@ -66,7 +61,6 @@ try:
         
         print('Thank you for logging in.')
         while True:
-
             
             print('Type S to search for a credential. \nA to add a credential. \nE to edit a credential. \nD to delete a credential')
             user_input = input('> ').strip().lower()
@@ -127,9 +121,6 @@ try:
 
 except KeyboardInterrupt:
 
-    # # save the json data
-    # with open('storage.json', 'r') as file: 
-    #     vault = json.load()
     print("\n----------------------------------------------------\nLogging out and exiting the program.") 
 
         
