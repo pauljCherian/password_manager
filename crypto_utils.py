@@ -2,13 +2,8 @@
 from cryptography.fernet import Fernet
 import json
 import os
-# make const encryption_key variable to remember the encryption key 
-# add_encrypted_credential(service, username, password) 
-# calls some encrypt function in cryptography library to encrypt service, username, password 
-# Stores encrypted service, username, password in storage.json
-# decrypt(json object)
-# Use the encryption_key to decrypt and return the username and password 
 
+# get key if already registered, otherwise generate a key
 def get_or_create_key():
     try:
         with open('auth.json', 'r') as auth_file:
