@@ -45,10 +45,6 @@ def search_by_service(service):
     # none found 
     return None  
 
-def retrieve_credential(service, username):
-    pass
-
-
 def edit_credential_username(service, new_username): 
     # open json file 
     with open(storage_filename, 'r') as file: 
