@@ -20,8 +20,6 @@ def is_vault_empty(vault):
 
 
 def save_first_salt(filename):
-    with open(filename, 'r') as file:
-        vault = json.load(file)
 
     try:
         with open('auth.json', 'r') as auth_file:
@@ -29,21 +27,27 @@ def save_first_salt(filename):
     except (json.JSONDecodeError, FileNotFoundError):
         auth_data = {}
 
-    if is_vault_empty(vault):
+    print(f"authdata = {auth_data}")
+
+    if auth_data == {}:
         salt = os.urandom(16)
         encrypted_salt = encrypt_salt(salt)  
 
-        auth_data['salt'] = encrypted_salt
+        auth_data = {
+            'salt' : encrypted_salt
+        }
 
         with open('auth.json', 'w') as auth_file: 
             json.dump(auth_data, auth_file, indent=4)
+
+    print(f"saved salt: {auth_data.get('salt')}")
 
     return auth_data.get('salt')
     
 
 def register_master_password(master_password): 
 
-    salt = save_first_salt('storage.json')
+    salt = save_first_salt('auth.json')
 
     print("THIS IS THE SALT", salt)
     # hash and salt the master password 

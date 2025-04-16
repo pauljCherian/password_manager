@@ -8,14 +8,13 @@ vault = None
 def set_up_json(filename): 
     try:
         with open(filename, 'r') as file:
-            content = file.read().strip()
-            if not content:
-
-                vault = {}
-            else:
-                vault = json.loads(content)
+            #content = file.read().strip()
+            vault = json.load(file)
+            # if not content:
+            #     vault = {}
+            # else:
+            #     vault = json.load(filename)
     except (json.JSONDecodeError, IOError):
-
         vault = {}
 
     if not vault or is_vault_empty(vault):
@@ -29,6 +28,9 @@ def set_up_json(filename):
     else:
         print("Vault already set up.")
 
+    print(f"vault: {vault}")
+
+
 try:
     set_up_json('storage.json')
     print('Welcome to the password manager. \nType R to register, S to sign in. To quit and log out at any time, press (control + C).')
@@ -39,9 +41,18 @@ try:
         if user_input == 'q':
             break
         elif user_input == 'r':
+            # when you register, wipe the vault
+            refresh = {
+            'master_password': '',
+            'credentials': []
+            }
+            with open('storage.json', 'w') as file: 
+                json.dump(refresh, file)
+
             print('Please register your master password by typing it below.')
             pwd = input('> ').strip().lower()
             register_master_password(pwd)
+
         elif user_input == 's':
             print('Please sign in with your master password.')
             pwd = input('> ').strip().lower()
@@ -116,9 +127,9 @@ try:
 
 except KeyboardInterrupt:
 
-    # save the json data
-    with open('storage.json', 'r') as file: 
-        vault = json.load()
+    # # save the json data
+    # with open('storage.json', 'r') as file: 
+    #     vault = json.load()
     print("\n----------------------------------------------------\nLogging out and exiting the program.") 
 
         
