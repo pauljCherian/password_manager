@@ -2,7 +2,6 @@
 import hashlib 
 import os 
 import json
-from main import first_time 
 from crypto_utils import *
 
 # check_login(username, password)
@@ -15,25 +14,40 @@ from crypto_utils import *
 # Stores username and master_password into a json file 
 
 # generate a random salt if first time 
-if first_time: 
-    salt = os.urandom(16) #16 byte random salt 
-    # encrypt the salt 
-    encrypted_salt = encrypt_password(salt)
-    # save the salt into auth.json
-    # store this in json file 
-    with open('auth.json', 'r') as file: 
-        data = json.load(file)
+
+def is_vault_empty(vault):
+    return vault.get('master_password') == ''
+
+
+def save_first_salt(filename):
+    with open(filename, 'r') as file:
+        vault = json.load(file)
+
+    try:
+        with open('auth.json', 'r') as auth_file:
+            auth_data = json.load(auth_file)
+    except (json.JSONDecodeError, FileNotFoundError):
+        auth_data = {}
+
+    if is_vault_empty(vault):
+        salt = os.urandom(16)
+        encrypted_salt = encrypt_salt(salt)  
+
+        auth_data['salt'] = encrypted_salt
+
+        with open('auth.json', 'w') as auth_file: 
+            json.dump(auth_data, auth_file, indent=4)
+
+    return auth_data.get('salt')
     
-    data['salt'] = encrypted_salt
-
-    # store this in json file 
-    with open('storage.json', 'w') as file: 
-        json.dump(data, file)
-
 
 def register_master_password(master_password): 
+
+    salt = save_first_salt('storage.json')
+
+    print("THIS IS THE SALT", salt)
     # hash and salt the master password 
-    hashed_salted_master = hashlib.sha256(salt + master_password.encode()).hexdigest()
+    hashed_salted_master = hashlib.sha256(salt.encode() + master_password.encode()).hexdigest()
 
     # store this in json file 
     with open('storage.json', 'r') as file: 
@@ -54,7 +68,7 @@ def check_login(master_password_try):
     with open('auth.json', 'r') as file:
         salt_data = json.load(file)
     
-    saved_salt = decrypt_password(salt_data.get(salt))
+    saved_salt = save_first_salt('storage.json')
 
     # retrieve the actual master password from the json file 
     with open('storage.json', 'r') as file:
@@ -63,7 +77,7 @@ def check_login(master_password_try):
     master_password = data.get('master_password')#this is hashed and salted
 
     # hash and salt the try 
-    hashed_salted_try = hashlib.sha256(saved_salt + master_password_try.encode()).hexdigest()
+    hashed_salted_try = hashlib.sha256(saved_salt.encode() + master_password_try.encode()).hexdigest()
 
     # compare to the actual master password
     if hashed_salted_try == master_password: 

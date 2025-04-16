@@ -1,26 +1,37 @@
 from auth import *
 from crypto_utils import *
 from src import *
-
-first_time = False # keeps track of if the user has initially logged in 
+ 
 vault = None
 #set up json file so everything goes into the "credentials" object
 # gets called when someone initializes their master password
 def set_up_json(filename): 
-    if not first_time: 
-        #create empty json file
+    try:
+        with open(filename, 'r') as file:
+            content = file.read().strip()
+            if not content:
+
+                vault = {}
+            else:
+                vault = json.loads(content)
+    except (json.JSONDecodeError, IOError):
+
+        vault = {}
+
+    if not vault or is_vault_empty(vault):
         vault = {
-            'master_password' : '',
-            'credentials' : []
+            'master_password': '',
+            'credentials': []
         }
-    with open(filename, 'w') as file: 
-        json.dump(vault, file)
+        with open(filename, 'w') as file: 
+            json.dump(vault, file, indent=4)
+        print("Vault initialized.")
+    else:
+        print("Vault already set up.")
 
 try:
-
     set_up_json('storage.json')
     print('Welcome to the password manager. \nType R to register, S to sign in. To quit and log out at any time, press (control + C).')
-    
     
     while True:
         user_input = input('> ').strip().lower()
@@ -104,11 +115,10 @@ try:
                 print('Service deleted')
 
 except KeyboardInterrupt:
-    if first_time: 
-        # have registered a password
-        # save the json data
-        with open('storage.json', 'r') as file: 
-            vault = json.load()
+
+    # save the json data
+    with open('storage.json', 'r') as file: 
+        vault = json.load()
     print("\n----------------------------------------------------\nLogging out and exiting the program.") 
 
         
