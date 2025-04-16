@@ -5,21 +5,10 @@ import json
 import base64
 from crypto_utils import *
 
-# check_login(username, password)
-# Checks if username is valid 
-# If not in storage.json return "user not found"/prompt to create a new account
-# Checks if (username, hash(password)) is in storage.json
-# Returns boolean if correct or not 
-# add_new_user(username, master_password): 
-# Hashes and salts the master_password using PBKDF2HMAC
-# Stores username and master_password into a json file 
-
-# generate a random salt if first time 
-
 def is_vault_empty(vault):
     return vault.get('master_password') == ''
 
-
+# if first time, generate a unique salt
 def save_first_salt():
     try:
         with open('auth.json', 'r') as auth_file:
@@ -44,9 +33,6 @@ def register_master_password(master_password):
     
     # hash and salt the master password 
     hashed_salted_master = hashlib.sha256(salt + master_password.encode()).hexdigest()
-
-    print(f"Registering with salt: {base64.b64encode(salt).decode()}")
-    print(f"Resulting hash: {hashed_salted_master}")
 
     # store this in json file 
     with open('storage.json', 'r') as file: 
@@ -73,10 +59,6 @@ def check_login(master_password_try):
 
     # hash and salt the try 
     hashed_salted_try = hashlib.sha256(saved_salt + master_password_try.encode()).hexdigest()
-
-    print(f"Login attempt with salt: {base64.b64encode(saved_salt).decode()}")
-    print(f"Stored hash: {master_password}")
-    print(f"Login hash: {hashed_salted_try}")
 
     # compare to the actual master password
     if hashed_salted_try == master_password: 
